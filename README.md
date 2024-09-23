@@ -1,5 +1,8 @@
 使用说明  本次api引用 https://github.com/chatanywhere/GPT_API_free
 
+演示站 http://140.83.38.156/
+
+
 后端使用python3环境安装
 需要安装最新得openai库
 先安装python3基础模块 和pip 然后安装下方模块环境
