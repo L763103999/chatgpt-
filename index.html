@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 问答系统 GPT4.0</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .response {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>AI 问答系统GPT4.0mini</h1>
+    <h1>永久免费 QQ群705323523</h1>
+    <p>请输入你的问题:</p>
+    <textarea id="userInput" rows="4" placeholder="在此输入您的问题"></textarea>
+    <button onclick="sendQuestion()">提交问题</button>
+
+    <div id="responseContainer" class="response"></div>
+    <button id="copyButton" style="display: none;" onclick="copyToClipboard()">复制内容</button> <!-- 复制按钮 -->
+
+    <script>
+        async function sendQuestion() {
+            const userQuestion = document.getElementById('userInput').value;
+            const responseContainer = document.getElementById('responseContainer');
+            const copyButton = document.getElementById('copyButton');
+
+            if (!userQuestion.trim()) {
+                responseContainer.innerHTML = "请输入一个问题。";
+                return;
+            }
+
+            // 清空之前的响应内容
+            responseContainer.innerHTML = "正在处理您的问题，请稍候...";
+            copyButton.style.display = 'none'; // 隐藏复制按钮
+
+            try {
+                // 向您的 Flask 后端发送请求
+                const response = await fetch('http://你的后端ip:你的后端端口号/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: userQuestion })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    responseContainer.innerHTML = data.reply;
+                    copyButton.style.display = 'block'; // 显示复制按钮
+                } else {
+                    responseContainer.innerHTML = `API 错误: ${data.error || '未知错误'}`;
+                }
+            } catch (error) {
+                responseContainer.innerHTML = `发生错误: ${error.message}`;
+            }
+        }
+
+        function copyToClipboard() {
+            const responseContainer = document.getElementById('responseContainer');
+            const textToCopy = responseContainer.innerText;
+
+            if (textToCopy) {
+                // 创建临时文本区域以便复制
+                const textarea = document.createElement('textarea');
+                textarea.value = textToCopy;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                alert('内容已复制到剪贴板！');
+            } else {
+                alert('没有内容可复制。');
+            }
+        }
+    </script>
+</body>
+</html>
